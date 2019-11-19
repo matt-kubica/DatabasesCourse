@@ -1,0 +1,1 @@
+COPY czekoladki FROM stdin WITH(NULL '', delimiter ',');

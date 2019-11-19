@@ -1,0 +1,6 @@
+Polecenia:
+	\a - wyrównanie (alignment)
+	\f 'separator' - separator
+	\H - format html
+	\o 'path' - przekierowanie wyników kwerend
+	\i 'path' - otwarcie pliku z poleceniami
