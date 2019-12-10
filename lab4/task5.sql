@@ -1,5 +1,5 @@
 # 1.
-SELECT pudelka.nazwa, pudelka.opis, pudelka.cena FROM pudelka
+SELECT DISTINCT pudelka.nazwa, pudelka.opis, pudelka.cena FROM pudelka
 	INNER JOIN zawartosc USING(idpudelka)
 	INNER JOIN czekoladki USING(idczekoladki)
 WHERE czekoladki.idczekoladki = 'd09';
@@ -22,10 +22,14 @@ SELECT DISTINCT pudelka.nazwa, pudelka.opis, pudelka.cena FROM pudelka
 WHERE czekoladki.nadzienie = 'truskawki';
 
 # 5.
-SELECT DISTINCT pudelka.nazwa, pudelka.opis, pudelka.cena FROM pudelka
-	INNER JOIN zawartosc USING(idpudelka)
-	INNER JOIN czekoladki USING(idczekoladki)
-WHERE czekoladki.czekolada != 'gorzka';
+SELECT DISTINCT p.nazwa, p.cena FROM pudelka p
+	INNER JOIN zawartosc z USING(idpudelka)
+	INNER JOIN czekoladki cz USING(idczekoladki)
+EXCEPT
+SELECT DISTINCT  p.nazwa, p.cena FROM pudelka p
+	INNER JOIN zawartosc z USING(idpudelka)
+	INNER JOIN czekoladki cz USING(idczekoladki)
+WHERE cz.czekolada = 'gorzka';
 
 # 6.
 SELECT DISTINCT pudelka.nazwa, pudelka.opis, pudelka.cena FROM pudelka
@@ -34,10 +38,14 @@ SELECT DISTINCT pudelka.nazwa, pudelka.opis, pudelka.cena FROM pudelka
 WHERE zawartosc.sztuk >= 3 AND czekoladki.nazwa IN ('Gorzka truskawkowa');
 
 # 7.
-SELECT DISTINCT pudelka.nazwa, pudelka.opis, pudelka.cena FROM pudelka
-	INNER JOIN zawartosc USING(idpudelka)
-	INNER JOIN czekoladki USING(idczekoladki)
-WHERE czekoladki.orzechy IS NULL;
+SELECT DISTINCT p.nazwa, p.cena FROM pudelka p
+	INNER JOIN zawartosc z USING(idpudelka)
+	INNER JOIN czekoladki cz USING(idczekoladki)
+EXCEPT
+SELECT DISTINCT  p.nazwa, p.cena FROM pudelka p
+	INNER JOIN zawartosc z USING(idpudelka)
+	INNER JOIN czekoladki cz USING(idczekoladki)
+WHERE cz.orzechy IS NOT NULL;
 
 #8.
 SELECT DISTINCT pudelka.nazwa, pudelka.opis, pudelka.cena FROM pudelka

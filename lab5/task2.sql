@@ -5,6 +5,7 @@ SELECT pudelka.idpudelka, SUM(czekoladki.masa * zawartosc.sztuk) FROM pudelka
 GROUP BY pudelka.idpudelka
 ORDER BY SUM(czekoladki.masa * zawartosc.sztuk) DESC;
 
+
 # 2.
 SELECT pudelka.idpudelka, SUM(czekoladki.masa * zawartosc.sztuk) FROM pudelka
 	INNER JOIN zawartosc USING(idpudelka)

@@ -1,27 +1,25 @@
 # 1.
 
-SELECT pudelka.idpudelka, abs(SUM(zawartosc.sztuk * czekoladki.koszt) - pudelka.cena) AS zysk FROM pudelka
-	INNER JOIN zawartosc USING(idpudelka)
-	INNER JOIN czekoladki USING(idczekoladki)
-GROUP BY pudelka.idpudelka
-ORDER BY abs(SUM(zawartosc.sztuk * czekoladki.koszt) - pudelka.cena) DESC;
+WITH koszt_wytworzenia AS (
+	SELECT z.idpudelka, SUM(z.sztuk * cz.koszt) AS koszt FROM zawartosc z
+		INNER JOIN czekoladki cz USING(idczekoladki)
+	GROUP BY z.idpudelka
+)                                         
+SELECT p.idpudelka, (p.cena - k.koszt) AS roznica FROM pudelka p
+	INNER JOIN koszt_wytworzenia k USING(idpudelka)
+ORDER BY roznica DESC;
+
+
 
 # 2.
-WITH 
-zysk AS (
-	SELECT pudelka.idpudelka, abs(SUM(zawartosc.sztuk * czekoladki.koszt) - pudelka.cena) FROM pudelka
-		INNER JOIN zawartosc USING(idpudelka)
-		INNER JOIN czekoladki USING(idczekoladki)
-	GROUP BY pudelka.idpudelka
-	),
-ilosc_zamowien AS (
-	SELECT artykuly.idpudelka, COUNT(artykuly.idzamowienia) FROM artykuly
-	GROUP BY artykuly.idpudelka
-	)
-SELECT DISTINCT artykuly.idpudelka, (ilosc_zamowien.count * zysk.abs * artykuly.sztuk) AS zysk_pudelka FROM artykuly
-	INNER JOIN zysk USING(idpudelka)
-	INNER JOIN ilosc_zamowien USING(idpudelka)
-ORDER BY zysk_pudelka DESC;
+WITH koszt_wytworzenia AS (
+	SELECT z.idpudelka, SUM(z.sztuk * cz.koszt) AS koszt FROM zawartosc z
+		INNER JOIN czekoladki cz USING(idczekoladki)
+	GROUP BY z.idpudelka
+)
+SELECT SUM(a.sztuk * (p.cena - k.koszt)) FROM artykuly a
+	INNER JOIN pudelka p USING(idpudelka)
+	INNER JOIN koszt_wytworzenia k USING(idpudelka);
 
 # 2.1
 WITH 

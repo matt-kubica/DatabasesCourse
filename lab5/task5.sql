@@ -1,16 +1,25 @@
 # 1.
-SELECT COUNT(zamowienia.idzamowienia), DATE_PART('quarter', zamowienia.datarealizacji) AS quarter FROM zamowienia
-GROUP BY DATE_PART('quarter', zamowienia.datarealizacji)
+SELECT COUNT(zamowienia.idzamowienia), 
+		DATE_PART('quarter', zamowienia.datarealizacji) AS quarter,
+		DATE_PART('year', zamowienia.datarealizacji) AS year
+FROM zamowienia
+GROUP BY quarter, year
 ORDER BY COUNT(zamowienia.idzamowienia) DESC;
 
 # 2.
-SELECT COUNT(zamowienia.idzamowienia), DATE_PART('month', zamowienia.datarealizacji) AS month FROM zamowienia
-GROUP BY DATE_PART('month', zamowienia.datarealizacji)
+SELECT COUNT(zamowienia.idzamowienia), 
+		DATE_PART('month', zamowienia.datarealizacji) AS month,
+		DATE_PART('year', zamowienia.datarealizacji) AS year
+FROM zamowienia
+GROUP BY month, year
 ORDER BY COUNT(zamowienia.idzamowienia) DESC;
 
 # 3.
-SELECT COUNT(zamowienia.idzamowienia), DATE_PART('week', zamowienia.datarealizacji) AS week FROM zamowienia
-GROUP BY DATE_PART('week', zamowienia.datarealizacji)
+SELECT COUNT(zamowienia.idzamowienia), 
+		DATE_PART('week', zamowienia.datarealizacji) AS week,
+		DATE_PART('year', zamowienia.datarealizacji) AS year
+FROM zamowienia
+GROUP BY week, year
 ORDER BY COUNT(zamowienia.idzamowienia) DESC;
 
 # 4.

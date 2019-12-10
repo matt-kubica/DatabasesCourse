@@ -7,9 +7,8 @@ ORDER BY datarealizacji;
 SELECT COUNT(*) FROM zamowienia;
 
 # 3.
-SELECT SUM(artykuly.sztuk * pudelka.cena) FROM zamowienia
-	INNER JOIN artykuly USING(idzamowienia)
-	INNER JOIN pudelka USING(idpudelka);
+SELECT SUM(artykuly.sztuk * pudelka.cena) FROM pudelka
+	INNER JOIN artykuly USING(idpudelka);
 
 # 4.
 SELECT klienci.nazwa, COUNT(zamowienia.idzamowienia), SUM(pudelka.cena * artykuly.sztuk) FROM klienci

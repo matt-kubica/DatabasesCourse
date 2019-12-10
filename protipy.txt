@@ -1,0 +1,82 @@
+-- # ogarnac porownywanie stringow IS LIKE, regexp'y
+-- # generalnie każde zadanie z jednego labu
+
+-- zadanie 1.
+-- jakiś prosty select
+
+-- zadanie 2.
+-- # bedzie podobne, trzeba bedzie rozwiazac operatorem zbiorwym tj. EXCEPT itd.
+SELECT * FROM pomiary p
+EXCEPT
+	(SELECT p.* FROM pomiary p
+	INNER JOIN ostrzerzenia o ON
+	(p.id_punktu = o.id_punktu AND p.czas_pomiaru = o.czas))
+
+-- zadanie 4.
+-- wyswietl nazwy powiatow i srednie wartosci roznicy miedzy stanem alarmowym a stanem ostrzegawczym dla danego powiatu
+
+-- zadanie 5.
+-- wstaw do relacji punkty_pomiarowe nowa krotke reprezentujaca bla bla...,
+-- nr_porzadkowy musi byc o 1 wyzszy niz aktualnie najwyzszy na rzece odrze, id rzeki ma byc jak id_rzeki odry, reszta danych podana
+
+INSERT INTO punkty_pomiarowe VALUES (
+	1,
+	(SELECT MAX(pp.nr_porzadkowy) + 1 FROM punkty_pomiarowe pp
+	 NATURAL JOIN rzeki rz 
+	 WHERE nazwa = 'Odra'),
+	1,
+	(SELEC id FROM rzeki WHERE nazwa = 'Odra'),
+	1,
+	1,
+	1,
+	1
+)
+
+
+
+
+-- Kolos 2018
+--------------------------------------------------------------------------
+SELECT id_punktu AS identyfikator_punktu_pomiarowego, poziom_wody AS zmierzony_poziom_wody
+FROM pomiary
+WHERE poziom_wody BETWEEN 100 AND 150
+ORDER BY poziom_wody DESC;
+--------------------------------------------------------------------------
+SELECT * FROM pomiary p
+	EXCEPT (
+		SELECT p.* FROM pomiary p
+			INNER JOIN ostrzerzenia o ON
+				o.id_punktu = p.id_punktu AND
+				o.czas_ostrzerzenia = p.czas_pomiaru
+	); 
+--------------------------------------------------------------------------
+SELECT g.nazwa, pp.nr_porzadkowy FROM gminy g
+	INNER JOIN punkty_pomiarowe pp ON g.identyfikator = pp.id_gminy
+WHERE g.nazwa SIMILAR TO '%(Ko|ko)%';
+--------------------------------------------------------------------------
+WITH roznice AS (
+	SELECT p.identyfikator, MAX(pp.stan_ostrzegawczy - pp.stan_alarmowy) AS roznica_stan_ostrzegawczy_alarmowy FROM powiaty p
+		INNER JOIN gminy g ON p.identyfikator = g.id_powiatu
+		INNER JOIN punkty_pomiarowe pp ON g.identyfikator = pp.id_gminy
+	GROUP BY p.identyfikator
+	)
+SELECT p.nazwa r.roznica_stan_ostrzegawczy_alarmowy FROM powiaty p
+	INNER JOIN roznice USING(identyfikator)
+ORDER BY r.roznica_stan_ostrzegawczy_alarmowy DESC;
+-------------------------------------------------------------------------
+INSERT INTO punkty_pomiarowe VALUES(
+	90211,
+	(SELECT MAX(pp.nr_porzadkowy) + 1 FROM punkty_pomiarowe pp
+		INNER JOIN rzeki rz USING(id_rzeki)
+	WHERE rz.nazwa = 'Wisła'),
+	1500,
+	(SELECT id_rzeki FROM rzeki WHERE nazwa = 'Wisła'),
+	54.34,
+	18.94,
+	60,
+	100
+)
+
+
+
+

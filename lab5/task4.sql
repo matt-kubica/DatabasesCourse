@@ -1,31 +1,24 @@
 # 1.
-SELECT czekoladki.idczekoladki, czekoladki.nazwa, COUNT(pudelka.idpudelka) FROM czekoladki
-	INNER JOIN zawartosc USING(idczekoladki)
-	INNER JOIN pudelka USING(idpudelka)
-GROUP BY czekoladki.idczekoladki
-ORDER BY COUNT(pudelka.idpudelka) DESC
-LIMIT 1;
+SELECT idczekoladki, COUNT(idpudelka) as w_ilu_pudelkach FROM zawartosc
+GROUP BY idczekoladki
+ORDER BY w_ilu_pudelkach DESC
+LIMIT ;
+
 
 # 2.
-SELECT DISTINCT pudelka.idpudelka, zawartosc.sztuk FROM pudelka
-	INNER JOIN zawartosc USING(idpudelka)
-	INNER JOIN czekoladki USING(idczekoladki)
-WHERE czekoladki.orzechy IS NULL
-ORDER BY zawartosc.sztuk DESC
-LIMIT 1;
+SELECT z.idpudelka, SUM(z.sztuk) FROM zawartosc z
+WHERE z.idczekoladki IN (SELECT cz.idczekoladki FROM czekoladki cz WHERE cz.orzechy IS NULL)
+GROUP BY z.idpudelka
+ORDER BY SUM(z.sztuk) DESC;
 
 # 3.
-SELECT czekoladki.idczekoladki, czekoladki.nazwa, COUNT(pudelka.idpudelka) FROM czekoladki
-	INNER JOIN zawartosc USING(idczekoladki)
-	INNER JOIN pudelka USING(idpudelka)
-GROUP BY czekoladki.idczekoladki
-ORDER BY COUNT(pudelka.idpudelka) ASC
+SELECT idczekoladki, COUNT(idpudelka) as w_ilu_pudelkach FROM zawartosc
+GROUP BY idczekoladki
+ORDER BY w_ilu_pudelkach ASC
 LIMIT 1;
 
 #4. 
-SELECT pudelka.idpudelka, COUNT(zamowienia.idklienta) FROM pudelka
-	INNER JOIN artykuly USING(idpudelka)
-	INNER JOIN zamowienia USING(idzamowienia)
-GROUP BY pudelka.idpudelka
-ORDER BY COUNT(zamowienia.idklienta) DESC
+SELECT a.idpudelka, SUM(a.sztuk) FROM artykuly a
+GROUP BY a.idpudelka
+ORDER BY SUM(a.sztuk) DESC
 LIMIT 1;
